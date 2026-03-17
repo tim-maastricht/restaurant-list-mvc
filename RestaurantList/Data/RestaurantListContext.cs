@@ -25,6 +25,47 @@ namespace RestaurantList.Data
                .WithMany(rd => rd.RestaurantDishes)
                .HasForeignKey(d => d.DishId);
 
+            modelBuilder.Entity<Restaurant>().HasData(
+                // this is seeding the database with an initial restaurant entry, which will be added to the Restaurants table when the database is created or updated
+                new Restaurant
+                {
+                    Id = 1,
+                    Name = "Gourmet Pizzeria",
+                    Address = "1234 Culinary St, Flavour, CA 90210",
+                    ImageUrl = "https://www.whereyoueat.com/r_gallery_images/rgallery-21635/Best_Italian_Pizza2.jpg"
+                }
+            );
+
+            modelBuilder.Entity<Dish>().HasData(
+                new Dish
+                {
+                    Id = 1,
+                    Name = "Pizza",
+                    Price = 10
+                },
+                new Dish
+                {
+                    Id = 2,
+                    Name = "Pasta",
+                    Price = 9
+                }
+            );
+
+            modelBuilder.Entity<RestaurantDish>().HasData(
+                // this is seeding the RestaurantDishes table with two entries that link the restaurant with id 1 to the dishes with ids 1 and 2
+                // establishing a many-to-many relationship between the restaurant and its dishes
+                new RestaurantDish
+                {
+                    RestaurantId = 1,
+                    DishId = 1
+                },
+                new RestaurantDish
+                {
+                    RestaurantId = 1,
+                    DishId = 2
+                }
+            );
+
             base.OnModelCreating(modelBuilder);
         }
         // each DbSet corresponds to a table in the database
