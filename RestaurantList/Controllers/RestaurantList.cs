@@ -17,9 +17,20 @@ namespace RestaurantList.Controllers
         {
             return View(await _context.Restaurants.ToListAsync());
         }
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+        
+        public async Task<IActionResult> Details(int? id)
+        {
+            var restaurant = await _context.Restaurants
+                .Include(rd => rd.RestaurantDishes)
+                .ThenInclude(d => d.Dish)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
+
+            return View(restaurant);
+        }
     }
 }
