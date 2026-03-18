@@ -13,9 +13,17 @@ namespace RestaurantList.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Restaurants.ToListAsync());
+            // this is a LINQ query to get all restaurants from the database, and if a search string is provided, filter the restaurants by name
+            var restaurants = from r in _context.Restaurants select r;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                restaurants = restaurants.Where(r => r.Name.Contains(searchString));
+            }
+            // this is like an SQL filter that will be applied to the query, and the results will be returned as a list to the view
+            return View(await restaurants.ToListAsync());
         }
         
         public async Task<IActionResult> Details(int? id)
